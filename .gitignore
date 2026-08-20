@@ -1,0 +1,5 @@
+.DS_Store
+*.bak-*
+
+# 设计文档只在本地留着
+dev-docs/

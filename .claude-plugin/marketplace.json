@@ -1,0 +1,10 @@
+{
+  "name": "ant-agent",
+  "description": "Disposable subagent colony for Claude Code — keep throwaway investigation out of the main context.",
+  "owner": {
+    "name": "jin.huang"
+  },
+  "plugins": [
+    { "name": "ant-agent", "source": "./plugins/ant-agent" }
+  ]
+}

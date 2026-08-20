@@ -1,0 +1,29 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 产物必须跟源卡同步。改了 shared/ 却没跑 build 就提交的，这一步会挂。
+      - name: build
+        run: node scripts/build.mjs
+
+      - name: 产物是否已提交最新版
+        run: |
+          if ! git diff --exit-code --stat; then
+            echo "::error::产物跟源卡不同步。本地跑 node scripts/build.mjs 后重新提交。"
+            exit 1
+          fi
+
+      - name: validate
+        run: node scripts/validate.mjs
