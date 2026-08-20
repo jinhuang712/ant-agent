@@ -42,10 +42,15 @@ ant-agent 做的就是把探索赶进可丢弃的子上下文，只让那一行�
 ## 装
 
 ```bash
-git clone <this-repo> ~/dev/skills/ant-agent
+git clone https://github.com/jinhuang712/ant-agent ~/dev/skills/ant-agent
 cd ~/dev/skills/ant-agent
 node scripts/build.mjs      # 源卡 → 两侧产物
-./install-claude.sh         # symlink 进 ~/.claude/agents/
+```
+
+### Claude Code
+
+```bash
+./install-claude.sh         # symlink 进 ~/.claude/agents/，八只全局可用
 ```
 
 装完还要把授权片段并进你的 `CLAUDE.md`：
@@ -55,6 +60,17 @@ cat docs/CLAUDE.md.snippet
 ```
 
 **这一步不能省。** Claude Code 的系统提示里带着一句「用户没要求就别调 AgentTool」，不写下授权，八只蚂蚁装了也不会被主动派出去。
+
+### Codex
+
+```bash
+./install-codex.sh                          # 只装 dispatch skill
+./install-codex.sh /abs/path/to/project     # 顺便把角色 TOML 落进那个项目
+```
+
+**Codex 的角色是项目级的**，住在 `<项目根>/.codex/agents/`，换个项目要再落一次。不带路径跑就只装 skill，之后让 `$ant-agent:ant-dispatch` 自己 init。
+
+两侧的差别只在角色住哪：Claude 全局一份装完即用，Codex 每个项目一份。
 
 ## 改一只蚂蚁
 
@@ -83,7 +99,7 @@ symlink 装载，改完即生效，不用重装。八只共享的契约在 `shar
 - **`model:` frontmatter 不生效**（实测）。dispatch 时必须显式传 `model`，否则蚂蚁会跑成主会话的模型，降档收益全丢。这条写进了每只的 description 当每轮提醒
 - **想不起来派，这套东西解决不了。** 蚂蚁靠 description 出现在每轮的可用列表里被想起来，跟 skill 是同一层机制。真要每一步都盯着，得上 PreToolUse hook
 - **符号导航类 MCP 的 active project 是进程级状态**，跨仓并行会互相踩，跨仓请串行派
-- **Codex 侧尚未实现。** 构建脚本已经在产出 `.codex/agents/*.toml`，但插件清单、dispatch skill 和 init 动作还没做
+- **Codex 侧已实现但未实测。** 角色 TOML、dispatch skill、插件清单、安装脚本都在，形状是照现有 Codex 插件推的，但三个假设一次没验：`spawn_agent` 认不认自定义 `agent_type`、skill 里的 init 相对路径装完还成不成立、marketplace 清单格式对不对
 
 设计文档见 `dev-docs/`。
 
