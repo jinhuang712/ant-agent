@@ -30,7 +30,7 @@
 ### 工具
 
 - `scripts/build.mjs` — 源卡 → 两侧产物
-- `scripts/validate.mjs` — 七条校验，含 YAML 合法性与跨平台语法污染
+- `scripts/validate.mjs` — 八条校验，含 YAML 合法性、跨平台语法污染、清单与产物目录一致性
 - `install-claude.sh` / `install-codex.sh` — symlink 装载，装前跑 validate
 - CI 校验产物与源卡同步
 

@@ -2,7 +2,7 @@
 // 产物合规校验。产物格式错了不会报错只会静默失效，这是唯一的防线。
 // 挂 CI，也在 install-*.sh 里跑一遍。
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, resolve, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -94,6 +94,51 @@ if (existsSync(CODEX_SKILLS)) {
 for (const s of claudeSlugs) if (!codexSlugs.has(s)) fail(`${s}: Codex 侧缺产物`);
 for (const s of codexSlugs) if (!claudeSlugs.has(s)) fail(`${s}: Claude 侧缺产物`);
 if (!claudeSlugs.size) fail("没有任何产物，先跑 scripts/build.mjs");
+
+// 两份 marketplace 清单声明的 source 路径，必须跟脚本实际写产物的地方对得上。
+// 这是仓里唯一的静默失败模式：改了目录名而没同步清单，build 和上面所有校验都会通过
+// （产物照样生成到旧位置），但插件不再被加载，而且没有任何报错。
+const posix = (p) => p.split(sep).join("/");
+
+function checkManifest(label, manifestPath, pick, mustContain) {
+  if (!existsSync(manifestPath)) return fail(`${label}: 清单不存在`);
+  let declared;
+  try {
+    declared = pick(JSON.parse(readFileSync(manifestPath, "utf8")));
+  } catch (e) {
+    return fail(`${label}: 解析失败 ${e.message}`);
+  }
+  if (!declared) return fail(`${label}: 没声明 source`);
+  const target = resolve(ROOT, declared);
+  const rel = posix(relative(target, mustContain));
+  if (rel.startsWith("..")) {
+    fail(`${label}: source 声明的 ${declared} 装不下产物目录 ` +
+         `${posix(relative(ROOT, mustContain))} —— 插件会静默不加载`);
+  }
+}
+
+checkManifest(
+  ".claude-plugin/marketplace.json",
+  join(ROOT, ".claude-plugin", "marketplace.json"),
+  (j) => j.plugins?.[0]?.source,
+  CLAUDE_OUT,
+);
+checkManifest(
+  ".agents/plugins/marketplace.json",
+  join(ROOT, ".agents", "plugins", "marketplace.json"),
+  (j) => j.plugins?.[0]?.source?.path,
+  CODEX_OUT,
+);
+
+// Claude 插件清单必须躺在 marketplace source 指向的那个目录里
+const claudePluginJson = join(CLAUDE_OUT, "..", ".claude-plugin", "plugin.json");
+if (!existsSync(claudePluginJson)) {
+  fail("plugins/ant-agent/.claude-plugin/plugin.json 不存在 —— Claude 认不出这是个插件");
+}
+const codexPluginJson = join(ROOT, "codex", ".codex-plugin", "plugin.json");
+if (!existsSync(codexPluginJson)) {
+  fail("codex/.codex-plugin/plugin.json 不存在 —— Codex 认不出这是个插件");
+}
 
 if (errors.length) {
   console.error(errors.map((e) => `  ✗ ${e}`).join("\n"));
