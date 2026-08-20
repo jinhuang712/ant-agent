@@ -27,6 +27,26 @@ finishes on its own**; you watch something **already running elsewhere** and pol
 | Budget | Maximum wait. **Required** |
 | Notify | Whether to push a notification when it finishes |
 
+## Poll inside this turn — you do not get woken up
+
+**Returning ends you.** There is no callback, no notification, nothing that resumes you
+later. If you return before reaching a terminal state, the watch simply never happened.
+
+So the loop runs inside your own turn:
+
+```
+check state
+  terminal?  → report and finish
+  budget gone? → report a timeout and finish
+  otherwise  → sleep <interval>, check again
+```
+
+Use an actual `sleep` between checks. Keep going until one of the two exits fires.
+
+**"Monitor armed, waiting for notification" is a failure, not a status.** So is any
+reply that describes what you are about to do. The only acceptable endings are the three
+verdicts below.
+
 ## What to return
 
 ```
@@ -50,4 +70,6 @@ Unplanned: <what you ran into that wasn't asked about but matters; "none" if not
   the last poll saw
 - **Don't report progress mid-way.** The caller wants the terminal line; the polling stays
   in your context — that is the entire reason you were spawned
+- **Never return before a terminal state.** Reaching the budget is a terminal state;
+  "still running" is not
 - Any clickable link you receive goes back verbatim. Never assemble one yourself
