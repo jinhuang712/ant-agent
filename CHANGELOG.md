@@ -24,6 +24,16 @@
 
 根因是机制不是态度——后台蚂蚁完成会唤醒主会话，而被唤醒必须产出一个 turn。禁止说话没用，它给不出替代动作；**turn 的内容可以是工具调用**，而先回那只的 pin 本来就要核。
 
+### 派发时把回收纪律贴到动作旁边
+
+新增 `PreToolUse` hook（`plugins/ant-agent/hooks/`），匹配 `Agent` 工具、只对 `ant-*` 生效，派发时静默注入一句回收纪律。
+
+纪律本身早就写在 CLAUDE.md 里，但那是每轮都在的背景噪音，24 次照犯。同一句话紧贴着派发动作出现，距离不一样。**这是 plugin 唯一能自带、装上就生效的机制**——agent 定义装得进去，用户的 CLAUDE.md 装不进去，`docs/CLAUDE.md.snippet` 只能靠人手抄。
+
+走 `hookSpecificOutput.additionalContext` 静默进上下文，不是 `exit 2 + stderr`——后者每次派发都渲染成一次 hook blocking error，八次派发八次红字，噪音比它要治的毛病还大。
+
+选 `PreToolUse` 而不是 `PostToolUse`：两者对这个用途时机等价（同一个 assistant turn 内），但前者的 `additionalContext` 本机有正在运行的实例佐证，后者只有文档——而文档在 `Stop` 的同类问题上错过一次，且这次自己前后两处格式还不一致。
+
 ### 修
 
 - **`ant-adjust` 的 description 自相矛盾**：生成器无差别拼「Always pass model=haiku」，而这只按活选档，自己还说着「edits 用 sonnet」。源卡新增可选字段 `model_rule` 覆盖那句默认文案

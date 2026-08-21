@@ -155,6 +155,29 @@ if (!existsSync(codexPluginJson)) {
   fail("codex/.codex-plugin/plugin.json 不存在 —— Codex 认不出这是个插件");
 }
 
+// hooks.json 引用的脚本不存在，宿主既不报错也不执行——跟清单路径写错是同一类静默失效。
+const hooksJson = join(CLAUDE_OUT, "..", "hooks", "hooks.json");
+if (existsSync(hooksJson)) {
+  let decl;
+  try {
+    decl = JSON.parse(readFileSync(hooksJson, "utf8"));
+  } catch (e) {
+    fail(`hooks/hooks.json: 解析失败 ${e.message}`);
+  }
+  for (const [event, matchers] of Object.entries(decl?.hooks ?? {})) {
+    for (const m of matchers) {
+      for (const h of m.hooks ?? []) {
+        const script = /\$\{CLAUDE_PLUGIN_ROOT\}\/(\S+?)["']?\s*$/.exec(h.command ?? "")?.[1];
+        if (!script) {
+          fail(`hooks/hooks.json: ${event} 的 command 没引用 \${CLAUDE_PLUGIN_ROOT} 下的脚本`);
+        } else if (!existsSync(join(CLAUDE_OUT, "..", script))) {
+          fail(`hooks/hooks.json: ${event} 引用的 ${script} 不存在 —— hook 会静默不执行`);
+        }
+      }
+    }
+  }
+}
+
 if (errors.length) {
   console.error(errors.map((e) => `  ✗ ${e}`).join("\n"));
   console.error(`\n${errors.length} 处违规`);
