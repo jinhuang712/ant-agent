@@ -98,7 +98,7 @@ symlink 装载，改完即生效，不用重装。八只共享的契约在 `shar
 
 **环境专有纪律不写进蚂蚁定义。** 子 agent 会继承你的 `CLAUDE.md`，时区约定、搜索禁令、内部工具链这些各家不同的规矩交给它就行。蚂蚁定义只写「这个角色怎么干活」。
 
-**给模型读的一律英文，给人读的中文。** 源卡、产物、共同契约是英文；README 和 `dev-docs/` 是中文。
+**给模型读的一律英文，给人读的中文。** 源卡、产物、共同契约是英文；README 与 CHANGELOG 是中文。
 
 ## 已知限制
 
@@ -106,8 +106,6 @@ symlink 装载，改完即生效，不用重装。八只共享的契约在 `shar
 - **想不起来派，这套东西解决不了。** 蚂蚁靠 description 出现在每轮的可用列表里被想起来，跟 skill 是同一层机制。真要每一步都盯着，得上 PreToolUse hook
 - **符号导航类 MCP 的 active project 是进程级状态**，跨仓并行会互相踩，跨仓请串行派
 - **Codex 侧已实现但未实测。** 角色 TOML、dispatch skill、插件清单、安装脚本都在，形状是照现有 Codex 插件推的，但三个假设一次没验：`spawn_agent` 认不认自定义 `agent_type`、skill 里的 init 相对路径装完还成不成立、marketplace 清单格式对不对
-
-设计文档见 `dev-docs/`。
 
 ## License
 
