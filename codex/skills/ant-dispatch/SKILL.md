@@ -125,6 +125,11 @@ Dispatching and collecting are both silent.
 **Dispatching costs one line**: "Sending an `ant-sift` to scan the remote." No reasoning
 about why that role, no list of the ones you ruled out, no quoting the message you wrote.
 
+**Several in flight? Wait for all of them.** One ant returning is not a reason to
+speak. Woken while others are still running, write nothing for the user — "that chain is
+closed, waiting on the last one before I give you the whole answer" spends a read and
+delivers nothing. Measured across six sessions, this is the single most common defect.
+
 **Collecting yields the conclusion only.** The ant's text is raw material, not output.
 Pasting it back wholesale returns every token you paid to compress and leaves the
 compression ratio at zero. Verify the pin, but say so only when it fails.
