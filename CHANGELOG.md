@@ -1,6 +1,17 @@
 # Changelog
 
+## 0.3.1 — 2026-08-21
+
+### Codex 侧的三处漏网
+
+改名当轮只顾着 Claude 侧，Codex 那边漏了三处，是派 `ant:sift` 去核自洽性时挖出来的——它真的装了 codex CLI 跑了一遍，不是纸上对照：
+
+- **`codex/.codex-plugin/plugin.json` 的 `defaultPrompt` 还写着 `$ant-agent:ant-dispatch`。** 同一份文件的 `name` 已经改成 `ant`，唯独这两行没跟着动。用户照那句提示的字面文本去敲，找不到插件
+- **同一份文件的 `version` 三个版本没动过**，一直停在 `0.1.0`。而防这件事的校验只接了 Claude 侧那根线——注释写得明明白白「忘了 bump 就是空操作」，Codex 侧的同名文件从没被接进去。现在两侧都查
+- **档位词汇没翻译。** 生成器把 Claude 的 `haiku` / `sonnet` 原样透传进 Codex 产物，写成 `Suggested model: haiku tier`；而同一个包里的 dispatch skill 表格要求传 `gpt-5.4-mini`。两份文档当面打架。现在按平台映射
+
 ## 0.3.0 — 2026-08-21
+
 
 ### 改名：ant-agent:ant-census → ant:census
 

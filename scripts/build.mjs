@@ -87,11 +87,15 @@ ${COMMON}
 }
 
 function assembleCodex({ fm, body }) {
+  // 档位词汇是 Claude 的（haiku/sonnet），Codex 那边听不懂——它要的是 gpt-5.4 系。
+  // 不翻译的话，这句自我介绍会跟 dispatch skill 表格里要求传的模型名当面打架。
+  const CODEX_TIER = { haiku: "gpt-5.4-mini", sonnet: "gpt-5.4", opus: "gpt-5.4" };
   const head = [
-    "You are an ant-agent Codex Custom Agent, dispatched by the main session by situation.",
+    "You are one of the ant colony's Codex Custom Agents, dispatched by the main thread",
+    "by situation.",
     `Custom Agent: ant-${fm.slug}`,
-    `Suggested model: ${fm.model} tier. The main session passes \`model\` explicitly at`,
-    "spawn_agent time; this file cannot set it.",
+    `Suggested model: ${CODEX_TIER[fm.model] ?? fm.model}. The main thread passes \`model\``,
+    "explicitly at spawn_agent time; this file cannot set it.",
     `Workspace: ${fm.sandbox_mode}`,
   ].join("\n");
 
