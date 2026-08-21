@@ -189,6 +189,20 @@ if (existsSync(hooksJson)) {
   }
 }
 
+// 改了内容忘了 bump version，`claude plugin update` 会回一句「already at the latest
+// version」然后什么都不做——已装的人拿不到新内容，而且没有任何报错。拿 CHANGELOG 顶部的
+// 版本号当哨兵：写变更日志时顺手就把版本对上了。
+const pj = join(CLAUDE_OUT, "..", ".claude-plugin", "plugin.json");
+const cl = join(ROOT, "CHANGELOG.md");
+if (existsSync(pj) && existsSync(cl)) {
+  const ver = JSON.parse(readFileSync(pj, "utf8")).version;
+  const top = /^##\s+(\S+)/m.exec(readFileSync(cl, "utf8"))?.[1];
+  if (ver !== top) {
+    fail(`plugin.json 的 version ${ver} 跟 CHANGELOG 顶部的 ${top} 对不上 —— ` +
+         `忘了 bump 的话 plugin update 是空操作，已装的人拿不到新内容`);
+  }
+}
+
 if (errors.length) {
   console.error(errors.map((e) => `  ✗ ${e}`).join("\n"));
   console.error(`\n${errors.length} 处违规`);
