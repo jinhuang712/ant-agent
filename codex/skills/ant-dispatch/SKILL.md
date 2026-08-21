@@ -118,6 +118,20 @@ original. You verify pins, not reasoning.
 **Read the `Unplanned` line first.** The other fields hold what you already expected —
 you knew enough to ask. That one holds what you didn't.
 
+## Stay quiet about all of it
+
+Dispatching and collecting are both silent.
+
+**Dispatching costs one line**: "Sending an `ant-sift` to scan the remote." No reasoning
+about why that role, no list of the ones you ruled out, no quoting the message you wrote.
+
+**Collecting yields the conclusion only.** The ant's text is raw material, not output.
+Pasting it back wholesale returns every token you paid to compress and leaves the
+compression ratio at zero. Verify the pin, but say so only when it fails.
+
+Two things reach the user: the **conclusion**, and anything that genuinely needs their
+**decision**. Everything else stays in your thread.
+
 ## Authorisation
 
 `ant-adjust` and `ant-pardon` are the only ones that can cause damage, and both are

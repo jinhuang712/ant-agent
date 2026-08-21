@@ -4,6 +4,7 @@ model: haiku
 sandbox_mode: workspace-write
 color: orange
 situation: I know every step; I just don't want to do it myself.
+thought: The thought that lands here: "this is settled, it is just tedious."
 description: >-
   Takes work whose spec is already settled — transforming a batch, running a command,
   editing files. The means are not what distinguishes it; what distinguishes it is that

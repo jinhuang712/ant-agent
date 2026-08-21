@@ -4,6 +4,7 @@ model: sonnet
 sandbox_mode: read-only
 color: purple
 situation: I want a number, but first we have to settle what counts as one.
+thought: The thought that lands here: "how many are there?"
 description: >-
   Returns aggregates — a number or a table — with the criterion stated above them and the
   exact command that produced them below. Before sending this one, check whether the

@@ -4,6 +4,7 @@ model: sonnet
 sandbox_mode: read-only
 color: green
 situation: I can describe it, but I can't point to where it is.
+thought: The thought that lands here: "where is that actually defined?"
 description: >-
   Returns where things are, not what they do. Hand it a description of the thing and it
   comes back with a location list, marking which one is the main implementation. If you

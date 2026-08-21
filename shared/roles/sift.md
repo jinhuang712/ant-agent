@@ -4,6 +4,7 @@ model: sonnet
 sandbox_mode: read-only
 color: blue
 situation: I can say what counts as useful, but not which things are useful or where they are.
+thought: The thought that lands here: "there has to be some in here."
 description: >-
   Three conditions have to hold together: a filter criterion exists, no specific target
   does, and the pool is too large to page through by hand. Comes back with findings and

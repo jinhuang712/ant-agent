@@ -4,6 +4,7 @@ model: haiku
 sandbox_mode: workspace-write
 color: red
 situation: I know every step, and I'm not going to look at the result either.
+thought: The thought that lands here: "just do it, I am not going to check."
 description: >-
   For work that is certain to land and that the caller won't review. It differs from
   ant-adjust on exactly one axis — whether the result comes back. Three admission tests
