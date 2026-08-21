@@ -1,6 +1,6 @@
 {
   "name": "ant",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A colony of disposable subagents. The main session orchestrates and decides; ants do the throwaway investigation in isolated contexts and bring back only the conclusion plus a pin. Claimed by cognitive state, not by object type.",
   "author": {
     "name": "jin.huang"

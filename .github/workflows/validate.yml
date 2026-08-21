@@ -27,3 +27,7 @@ jobs:
 
       - name: validate
         run: node scripts/validate.mjs
+
+      # 逐条破坏 validate.mjs 的每条校验，确认真的拦得住；MISS 任意一条就让这步失败。
+      - name: 破坏测试矩阵
+        run: bash scripts/breakage-matrix.sh
