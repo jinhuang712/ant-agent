@@ -29,7 +29,6 @@ for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
   const text = readFileSync(join(CLAUDE_OUT, f), "utf8");
   const slug = f.replace(/^ant-/, "").replace(/\.md$/, "");
   claudeSlugs.add(slug);
-  if (!text.startsWith("---\n")) fail(`${f}: 缺 frontmatter`);
   // 匹配 model=<tier> 而不是整句——description 折成块标量后短语会被换行断开
   if (!/model=(haiku|sonnet|opus)\b/.test(text)) fail(`${f}: 缺 model 提醒`);
 
@@ -64,7 +63,7 @@ for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
   // 当成第二个 key 分隔符，整块 frontmatter 报废，而且没有任何运行时报错。
   const fmBlock = /^---\n([\s\S]*?)\n---\n/.exec(text);
   if (!fmBlock) {
-    fail(`${f}: frontmatter 没有闭合`);
+    fail(`${f}: frontmatter 缺失或没有闭合——要 --- 起、--- 收`);
   } else {
     for (const line of fmBlock[1].split("\n")) {
       if (/^\s/.test(line) || !line.trim()) continue; // 缩进行属于块标量，跳过
@@ -116,6 +115,20 @@ if (existsSync(CODEX_SKILLS)) {
     }
   }
 }
+
+// 成对性只能发现两侧不齐，发现不了「两边都少生成了一只」——源卡加了没跑 build 时，
+// 两侧的空缺天然成对。所以要拿 shared/roles/ 当基准回头对一遍。
+const roleSlugs = new Set(
+  readdirSync(join(ROOT, "shared", "roles"))
+    .filter((n) => n.endsWith(".md"))
+    .map((n) => n.slice(0, -3)),
+);
+for (const s of roleSlugs) {
+  if (!claudeSlugs.has(s) || !codexSlugs.has(s)) {
+    fail(`${s}: 源卡在 shared/roles/ 里，产物却没生成 —— 先跑 scripts/build.mjs`);
+  }
+}
+for (const s of claudeSlugs) if (!roleSlugs.has(s)) fail(`${s}: 有产物但源卡不在了，该删产物`);
 
 for (const s of claudeSlugs) if (!codexSlugs.has(s)) fail(`${s}: Codex 侧缺产物`);
 for (const s of codexSlugs) if (!claudeSlugs.has(s)) fail(`${s}: Claude 侧缺产物`);
