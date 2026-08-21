@@ -125,10 +125,14 @@ Dispatching and collecting are both silent.
 **Dispatching costs one line**: "Sending an `ant-sift` to scan the remote." No reasoning
 about why that role, no list of the ones you ruled out, no quoting the message you wrote.
 
-**Several in flight? Wait for all of them.** One ant returning is not a reason to
-speak. Woken while others are still running, write nothing for the user — "that chain is
-closed, waiting on the last one before I give you the whole answer" spends a read and
-delivers nothing. Measured across six sessions, this is the single most common defect.
+**One back, others still running? Spend the wait verifying its pin.** That check has
+to happen anyway and this is the moment for it — the wait is time to work. Write once,
+when they are all in.
+
+This is aimed at the most common defect measured across six sessions: one investigation
+arriving as four or five messages, roughly twenty-four occurrences. The cause is
+mechanical rather than attitudinal — a background ant finishing wakes the main thread,
+and being woken demands a turn. A turn does not have to be prose. It can be a tool call.
 
 **Collecting yields the conclusion only.** The ant's text is raw material, not output.
 Pasting it back wholesale returns every token you paid to compress and leaves the
