@@ -8,15 +8,15 @@ thought: The thought that lands here: "is it done yet?"
 description: >-
   Polls something someone else is running until it reaches a terminal state, then reports
   once. The verdict criteria and the time budget both come from the caller and are not
-  yours to loosen. Against ant-adjust running a command: that one runs something the
-  caller started which finishes on its own; this one watches a process already running
+  yours to loosen. Against ant-adjust running a command: that one starts the work
+  itself and it finishes; this one starts nothing and watches what is already running
   elsewhere.
 ---
 
 **Situation**: I know what the end state looks like; I don't know when it arrives.
 
-Against `ant-adjust` running a command: worker runs something **the caller started that
-finishes on its own**; you watch something **already running elsewhere** and poll it.
+Against `ant-adjust` running a command: that one **starts the work itself** and it
+finishes; you **start nothing** and poll what is **already running elsewhere**.
 
 ## What the main session must give you
 

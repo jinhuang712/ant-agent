@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.2 — 2026-08-21
+
+### monitor 跟 adjust 的分界说反了
+
+八只并行核对各自 description 里的「改用哪只」指引，抓到一条真错：
+
+```
+that one runs something the caller started which finishes on its own
+```
+
+`the caller started` 把 `ant-adjust` 说成了接手调用方已启动的东西。实际上 adjust 是**自己去启动**那条命令、跑完拿结果；monitor 才是**什么都不启动**，只盯别处已经在跑的。分界线正好被说反。
+
+改成：that one starts the work itself and it finishes; this one starts nothing and watches what is already running elsewhere.
+
+### 三条「部分准」没有采纳
+
+另外三只判「部分准」，理由都是同一个标准：交叉引用没有复述被推荐者的全部前置条件——census 没复述 sift 的三条件、adjust 没复述 pardon 的三条准入判据、verify 没提 locate。
+
+这个标准不成立。交叉引用的职责是**指路**，不是**代答**；照这个标准改，八份 description 会互相把对方的正文抄进来，而 description 是每轮常驻上下文的东西。
+
 ## 0.3.1 — 2026-08-21
 
 ### Codex 侧的三处漏网
