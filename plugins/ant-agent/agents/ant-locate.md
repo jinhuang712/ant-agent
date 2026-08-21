@@ -5,8 +5,9 @@ description: >-
   is that actually defined?" Returns where things are, not what they do. Hand it a
   description of the thing and it comes back with a location list, marking which one is
   the main implementation. If you can already point at the place and only need the value
-  sitting there, use ant-verify. If you need to know how something works rather than where
-  it lives, use ant-trace. Always pass model=sonnet explicitly when dispatching.
+  sitting there, use ant-agent:ant-verify. If you need to know how something works rather
+  than where it lives, use ant-agent:ant-trace. Always pass model=sonnet explicitly when
+  dispatching.
 color: green
 ---
 

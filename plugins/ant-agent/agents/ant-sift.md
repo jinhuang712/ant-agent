@@ -6,8 +6,8 @@ description: >-
   together: a filter criterion exists, no specific target does, and the pool is too large
   to page through by hand. Comes back with findings and pins rather than with the raw
   material, and reports anomalies whether or not they were asked about. If what you want
-  is a number rather than the things themselves, use ant-census. Always pass model=sonnet
-  explicitly when dispatching.
+  is a number rather than the things themselves, use ant-agent:ant-census. Always pass
+  model=sonnet explicitly when dispatching.
 color: blue
 ---
 

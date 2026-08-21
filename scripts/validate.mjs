@@ -33,6 +33,17 @@ for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
   // 匹配 model=<tier> 而不是整句——description 折成块标量后短语会被换行断开
   if (!/model=(haiku|sonnet|opus)\b/.test(text)) fail(`${f}: 缺 model 提醒`);
 
+  // description 会原样注入调用方的系统提示，里面的裸名 ant-census 被照抄去传
+  // subagent_type 就会找不到 agent——插件装载后真名是 ant-agent:ant-census。
+  const descBlock = /^description: >-\n((?:  .*\n)+)/m.exec(text)?.[1] ?? "";
+  const bare = [...descBlock.matchAll(/(?<!:)\bant-([a-z]+)\b/g)]
+    .map((m) => m[1])
+    .filter((sl) => sl !== slug && existsSync(join(ROOT, "shared", "roles", `${sl}.md`)));
+  if (bare.length) {
+    fail(`${f}: description 里有裸名 ant-${bare[0]} —— 装成插件后真名带前缀，` +
+         `照抄会找不到 agent。build.mjs 应该已经补上，产物是不是手改过？`);
+  }
+
   // 同一段 description 里出现两个不同档位就是自相矛盾。生成器无差别拼「Always pass
   // model=X」，而按活选档的角色自己还会说「mechanical 用 A、edits 用 B」，两句打架，
   // 且这段是主会话每次派活都会读到的原文。声明了 model_rule 的角色是刻意多档，跳过。

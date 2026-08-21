@@ -49,9 +49,25 @@ node scripts/build.mjs      # 源卡 → 两侧产物
 
 ### Claude Code
 
+两种装法，**装一种，别混**。
+
 ```bash
-./install-claude.sh         # symlink 进 ~/.claude/agents/，八只全局可用
+# A. 插件装（给使用者）——agents 和 hook 一起进来
+claude plugin marketplace add jinhuang712/ant-agent
+claude plugin install ant-agent@ant-agent
+
+# B. 软链装（给改这个仓的人）——只搬 agents，改完跑 build 即生效
+./install-claude.sh
 ```
+
+| | 插件装 | 软链装 |
+|---|---|---|
+| `subagent_type` | `ant-agent:ant-sift` | `ant-sift` |
+| 派发提醒 hook | **有** | 没有（`hooks/` 没人读） |
+| 改完源卡 | build → commit → push → `claude plugin update ant-agent` | build 一步 |
+| 装的是 | GitHub 远端快照 | 本地工作副本 |
+
+混装的后果是八只各出现两份。换装法之前先拆掉另一种——软链拆 `rm ~/.claude/agents/ant-*.md`，插件拆 `claude plugin uninstall ant-agent`。
 
 装完还要把授权片段并进你的 `CLAUDE.md`：
 

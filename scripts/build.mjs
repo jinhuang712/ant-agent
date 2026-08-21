@@ -56,10 +56,21 @@ function yamlBlock(key, text, indent = "  ") {
   return `${key}: >-\n${lines.map((l) => indent + l).join("\n")}`;
 }
 
+// Claude 侧装成插件后，subagent_type 带插件名前缀（ant-agent:ant-sift）。description 是
+// 每轮注入调用方系统提示的文本，里面的「use ant-census」被照抄去当 subagent_type 传就会
+// 找不到 agent。正文不管——那只有蚂蚁自己读，而蚂蚁不许再派（见共同契约第十条）。
+// Codex 侧不做这个替换：那边按项目级 TOML 的文件名寻址，没有命名空间这回事。
+const PLUGIN = JSON.parse(
+  readFileSync(join(ROOT, "plugins", "ant-agent", ".claude-plugin", "plugin.json"), "utf8"),
+).name;
+const SLUGS = readdirSync(ROLES).filter((n) => n.endsWith(".md")).map((n) => n.slice(0, -3));
+const qualify = (text) =>
+  text.replace(new RegExp(`\\bant-(${SLUGS.join("|")})\\b`, "g"), `${PLUGIN}:ant-$1`);
+
 function assembleClaude({ fm, body }) {
   return `---
 name: ant-${fm.slug}
-${yamlBlock("description", descLine(fm))}
+${yamlBlock("description", qualify(descLine(fm)))}
 color: ${fm.color}
 ---
 

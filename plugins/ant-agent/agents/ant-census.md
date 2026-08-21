@@ -7,7 +7,8 @@ description: >-
   sending this one, check whether the criterion can be written as a single command: if it
   can, run it yourself, that is cheaper and more reliable than any model. This ant exists
   for when defining what counts is itself the hard part. If you want the things rather
-  than the count, use ant-sift. Always pass model=sonnet explicitly when dispatching.
+  than the count, use ant-agent:ant-sift. Always pass model=sonnet explicitly when
+  dispatching.
 color: purple
 ---
 

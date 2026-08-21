@@ -34,6 +34,17 @@
 
 选 `PreToolUse` 而不是 `PostToolUse`：两者对这个用途时机等价（同一个 assistant turn 内），但前者的 `additionalContext` 本机有正在运行的实例佐证，后者只有文档——而文档在 `Stop` 的同类问题上错过一次，且这次自己前后两处格式还不一致。
 
+### 装成插件后蚂蚁改名了
+
+Claude 侧装成插件，`subagent_type` 带上插件命名空间：`ant-sift` → `ant-agent:ant-sift`。软链装法仍是裸名。两处跟着改：
+
+- **产物 description 里的交叉引用补前缀**。`use ant-census` 这类不是普通说明文字——description 每轮原样注入调用方的系统提示，照抄去当 `subagent_type` 传就会找不到 agent。生成器只对 Claude 侧的 description 做替换：正文不管（只有蚂蚁自己读，而它不许再派），Codex 侧也不管（那边按项目级 TOML 文件名寻址，没有命名空间）
+- **派发提醒 hook 的匹配改严**。原来写的是 `startsWith("ant-")`，能过纯属插件自己也叫 `ant-agent` 这层巧合，换个同样以 `ant-` 开头的命名空间就会误触发。改成 `/^(ant-agent:)?ant-[a-z]+$/`，两种装法都认
+
+第 11 条校验：Claude 侧 description 里出现裸名直接 fail。
+
+README 与 `install-claude.sh` 补上两种装法的对照——形状、hook 有没有、改完源卡要走几步，以及混装会让八只各出现两份。
+
 ### 修
 
 - **`ant-adjust` 的 description 自相矛盾**：生成器无差别拼「Always pass model=haiku」，而这只按活选档，自己还说着「edits 用 sonnet」。源卡新增可选字段 `model_rule` 覆盖那句默认文案

@@ -5,8 +5,8 @@ description: >-
   as B?" Walks a chain and returns it collapsed to one line, with a checkable pin per hop.
   Where the chain runs doesn't matter — code, runtime, config, or all three in one trace.
   It also carries back the dead ends it ruled out so nobody re-walks them. If you already
-  know the path and only need one value on it, use ant-verify. Always pass model=sonnet
-  explicitly when dispatching.
+  know the path and only need one value on it, use ant-agent:ant-verify. Always pass
+  model=sonnet explicitly when dispatching.
 color: cyan
 ---
 

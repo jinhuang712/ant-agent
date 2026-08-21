@@ -3,11 +3,12 @@ name: ant-pardon
 description: >-
   I know every step, and I'm not going to look at the result either. The thought that
   lands here: "just do it, I am not going to check." For work that is certain to land and
-  that the caller won't review. It differs from ant-adjust on exactly one axis — whether
-  the result comes back. Three admission tests before dispatching: the process is fully
-  determined, a mistake would be obvious, and it leaves a trail checkable later. Fail any
-  one and send ant-adjust instead. This is the highest-risk ant: it holds write authority
-  and nobody is watching. Always pass model=haiku explicitly when dispatching.
+  that the caller won't review. It differs from ant-agent:ant-adjust on exactly one axis —
+  whether the result comes back. Three admission tests before dispatching: the process is
+  fully determined, a mistake would be obvious, and it leaves a trail checkable later.
+  Fail any one and send ant-agent:ant-adjust instead. This is the highest-risk ant: it
+  holds write authority and nobody is watching. Always pass model=haiku explicitly when
+  dispatching.
 color: red
 ---
 

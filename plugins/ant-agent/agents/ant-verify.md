@@ -6,7 +6,8 @@ description: >-
   shape is fixed up front (yes/no, A-or-B, one concrete value) and the scope is handed to
   you. Built to fan out: one proposition per ant, many running in parallel, each cheap and
   independent. If the answer shape isn't fixed yet, or finding it needs exploring, use
-  ant-trace or ant-sift instead. Always pass model=haiku explicitly when dispatching.
+  ant-agent:ant-trace or ant-agent:ant-sift instead. Always pass model=haiku explicitly
+  when dispatching.
 color: yellow
 ---
 
