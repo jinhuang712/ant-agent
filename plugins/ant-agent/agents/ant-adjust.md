@@ -6,8 +6,9 @@ description: >-
   a batch, running a command, editing files. The means are not what distinguishes it; what
   distinguishes it is that nothing is left to decide. Read-only unless the dispatch
   explicitly authorises execution or writes. Returns results with pins. If you don't want
-  the result back at all, use ant-pardon. Pass model=haiku for mechanical work,
-  model=sonnet for edits. Always pass model=haiku explicitly when dispatching.
+  the result back at all, use ant-pardon. This is the one ant with no fixed tier. Pass
+  model=haiku when the work is mechanical, model=sonnet when it edits or the steps need
+  judgement to carry out. Leaving model unset is never right.
 color: orange
 ---
 

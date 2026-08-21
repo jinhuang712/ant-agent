@@ -1,5 +1,30 @@
 # Changelog
 
+## 未发布
+
+### 蚂蚁是叶子
+
+共同契约加第十条 **You are a leaf**：不许再派下一层，够不着的活写进 `Unplanned` 让调用方决定。
+
+起因是一次真实事故——一只 `ant-sift` 在收到任务 22 秒内、自己一条命令没跑，就把整份任务书原样转发给另一只 `ant-sift`；子层答完之后，父层又把同一批文件重扫了一遍，最后交了一份转述。子层 93,782 token 已经够了，这一支实际烧掉 173,997。
+
+三层 `model` 都碰巧传对了，但没有任何机制保证这一点：档位不继承，一只 haiku 蚂蚁不传 `model` 就能把活交给舰队里最贵的模型。
+
+### 源卡加 thought
+
+处境句描述的是第三人称的认知状态，准确，但模型伸手去调工具那一刻不会把自己的处境形式化成「我知道 X 不知道 Y」。`thought` 是同一个状态的第一人称当下表述——`"let me just check that."`、`"where is that actually defined?"`。
+
+两句管两件事：`situation` 管认领**准确**（`ant-sift` 和 `ant-census` 不混），`thought` 管认领**发生**。
+
+### 派发与收活都是静默的
+
+派一句话，收只给结论。把蚂蚁的返回原样转贴回主线，等于把压缩掉的 token 又倒回去。
+
+### 修
+
+- **`ant-adjust` 的 description 自相矛盾**：生成器无差别拼「Always pass model=haiku」，而这只按活选档，自己还说着「edits 用 sonnet」。源卡新增可选字段 `model_rule` 覆盖那句默认文案
+- `scripts/validate.mjs` 加第 9 条：同一段 description 里出现两个不同档位直接 fail，除非源卡声明了 `model_rule`
+
 ## 0.1.0 — 2026-08-20
 
 首个版本。

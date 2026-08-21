@@ -27,10 +27,25 @@ const codexSlugs = new Set();
 
 for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
   const text = readFileSync(join(CLAUDE_OUT, f), "utf8");
-  claudeSlugs.add(f.replace(/^ant-/, "").replace(/\.md$/, ""));
+  const slug = f.replace(/^ant-/, "").replace(/\.md$/, "");
+  claudeSlugs.add(slug);
   if (!text.startsWith("---\n")) fail(`${f}: 缺 frontmatter`);
   // 匹配 model=<tier> 而不是整句——description 折成块标量后短语会被换行断开
   if (!/model=(haiku|sonnet|opus)\b/.test(text)) fail(`${f}: 缺 model 提醒`);
+
+  // 同一段 description 里出现两个不同档位就是自相矛盾。生成器无差别拼「Always pass
+  // model=X」，而按活选档的角色自己还会说「mechanical 用 A、edits 用 B」，两句打架，
+  // 且这段是主会话每次派活都会读到的原文。声明了 model_rule 的角色是刻意多档，跳过。
+  const desc = /^description: >-\n((?:  .*\n)+)/m.exec(text)?.[1] ?? "";
+  const tiers = new Set([...desc.matchAll(/model=(haiku|sonnet|opus)\b/g)].map((m) => m[1]));
+  if (tiers.size > 1) {
+    const card = join(ROOT, "shared", "roles", `${slug}.md`);
+    const hasRule = existsSync(card) && /^model_rule:/m.test(readFileSync(card, "utf8"));
+    if (!hasRule) {
+      fail(`${f}: description 里同时出现 ${[...tiers].join(" 与 ")} 两档，自相矛盾 —— ` +
+           `按活选档的要在 shared/roles/${slug}.md 声明 model_rule`);
+    }
+  }
   if (!text.includes("Unplanned")) fail(`${f}: 缺 Unplanned 出口`);
   if (!/^name: ant-/m.test(text)) fail(`${f}: name 不是 ant-* 前缀`);
 

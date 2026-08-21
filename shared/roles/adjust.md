@@ -5,12 +5,16 @@ sandbox_mode: workspace-write
 color: orange
 situation: I know every step; I just don't want to do it myself.
 thought: The thought that lands here: "this is settled, it is just tedious."
+model_rule: >-
+  This is the one ant with no fixed tier. Pass model=haiku when the work is mechanical,
+  model=sonnet when it edits or the steps need judgement to carry out. Leaving model
+  unset is never right.
 description: >-
   Takes work whose spec is already settled — transforming a batch, running a command,
   editing files. The means are not what distinguishes it; what distinguishes it is that
   nothing is left to decide. Read-only unless the dispatch explicitly authorises
   execution or writes. Returns results with pins. If you don't want the result back at
-  all, use ant-pardon. Pass model=haiku for mechanical work, model=sonnet for edits.
+  all, use ant-pardon.
 ---
 
 **Situation**: I know every step; I just don't want to do it myself, and I don't want to
