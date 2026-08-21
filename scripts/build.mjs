@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const ROLES = join(ROOT, "shared", "roles");
-const CLAUDE_OUT = join(ROOT, "plugins", "ant-agent", "agents");
+const CLAUDE_OUT = join(ROOT, "plugins", "ant", "agents");
 const CODEX_OUT = join(ROOT, "codex", "templates", ".codex", "agents");
 
 // 八只共享的契约只维护这一份，改一处八只全变
@@ -56,20 +56,20 @@ function yamlBlock(key, text, indent = "  ") {
   return `${key}: >-\n${lines.map((l) => indent + l).join("\n")}`;
 }
 
-// Claude 侧装成插件后，subagent_type 带插件名前缀（ant-agent:ant-sift）。description 是
-// 每轮注入调用方系统提示的文本，里面的「use ant-census」被照抄去当 subagent_type 传就会
+// Claude 侧装成插件后，subagent_type 是「插件名:agent 名」（ant:sift）。description 是
+// 每轮注入调用方系统提示的文本，里面源卡写的「use ant-census」照抄去传就会
 // 找不到 agent。正文不管——那只有蚂蚁自己读，而蚂蚁不许再派（见共同契约第十条）。
 // Codex 侧不做这个替换：那边按项目级 TOML 的文件名寻址，没有命名空间这回事。
 const PLUGIN = JSON.parse(
-  readFileSync(join(ROOT, "plugins", "ant-agent", ".claude-plugin", "plugin.json"), "utf8"),
+  readFileSync(join(ROOT, "plugins", "ant", ".claude-plugin", "plugin.json"), "utf8"),
 ).name;
 const SLUGS = readdirSync(ROLES).filter((n) => n.endsWith(".md")).map((n) => n.slice(0, -3));
 const qualify = (text) =>
-  text.replace(new RegExp(`\\bant-(${SLUGS.join("|")})\\b`, "g"), `${PLUGIN}:ant-$1`);
+  text.replace(new RegExp(`\\bant-(${SLUGS.join("|")})\\b`, "g"), `${PLUGIN}:$1`);
 
 function assembleClaude({ fm, body }) {
   return `---
-name: ant-${fm.slug}
+name: ${fm.slug}
 ${yamlBlock("description", qualify(descLine(fm)))}
 color: ${fm.color}
 ---
@@ -125,7 +125,7 @@ if (!files.length) {
 for (const f of files) {
   const parsed = parseFrontmatter(readFileSync(join(ROLES, f), "utf8"), f);
   const slug = parsed.fm.slug;
-  writeFileSync(join(CLAUDE_OUT, `ant-${slug}.md`), assembleClaude(parsed));
+  writeFileSync(join(CLAUDE_OUT, `${slug}.md`), assembleClaude(parsed));
   writeFileSync(join(CODEX_OUT, `ant-${slug}.toml`), assembleCodex(parsed));
   console.log(`  ✓ ant-${slug}  ${parsed.fm.model.padEnd(6)} ${parsed.fm.sandbox_mode}`);
 }

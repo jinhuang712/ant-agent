@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ant-agent Claude 侧本地装载：plugins/ant-agent/agents/*.md symlink 进 ~/.claude/agents/。
+# ant-agent Claude 侧本地装载：plugins/ant/agents/*.md symlink 进 ~/.claude/agents/。
 # 机制：symlink 装载，改源跑一次 build 即生效，无需重装。
 # 幂等 + 覆盖：重复跑安全——已正确链接则跳过；指向别处 / 旧实体一律覆盖修复（实体先备份）。
 # 装载前先跑 validate，产物不合规就不装。
@@ -8,13 +8,13 @@
 # 软链装法：只搬 agents/ 下的八个定义文件，subagent_type 是裸名 ant-sift。
 # hooks/ 不会被加载——派发提醒那个 PreToolUse hook 只在插件装法下生效：
 #   claude plugin marketplace add jinhuang712/ant-agent
-#   claude plugin install ant-agent@ant-agent
+#   claude plugin install ant@ant
 # 两种装法不能混，会让八只各出现两份。
 # 用法：./install-claude.sh
 set -u
 
 SRC_ROOT="$(cd "$(dirname "$0")" && pwd -P)"
-AGENTS_SRC="${SRC_ROOT}/plugins/ant-agent/agents"
+AGENTS_SRC="${SRC_ROOT}/plugins/ant/agents"
 AGENTS_DIR="${HOME}/.claude/agents"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 

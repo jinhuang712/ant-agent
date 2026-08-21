@@ -26,11 +26,11 @@ try {
   emit(); // 读不到 payload 就别挡路
 }
 
-// 装成插件后 subagent_type 是 ant-agent:ant-sift，软链装则是裸的 ant-sift，两种都认。
-// 别写成 startsWith("ant-")——那能过只是因为插件名自己也叫 ant-agent，换个同样以 ant-
-// 开头的插件命名空间就会误触发。
+// 只认 ant:<slug>。这个 hook 只在插件装法下被加载，而插件装法的 subagent_type 一定带
+// 命名空间——软链装法压根不读 hooks/，不用为它的裸名留后门。锚定两端，别用 startsWith：
+// 前缀匹配会把任何以 ant 开头的别家命名空间一起吃进来。
 const slug = payload?.tool_input?.subagent_type ?? "";
-if (!/^(ant-agent:)?ant-[a-z]+$/.test(slug)) emit(); // 别的 subagent 不归这条纪律管
+if (!/^ant:[a-z]+$/.test(slug)) emit(); // 别的 subagent 不归这条纪律管
 
 emit(
   `<!-- ant-agent:dispatch -->\n` +

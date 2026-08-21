@@ -20,16 +20,16 @@ ant-agent 做的就是把探索赶进可丢弃的子上下文，只让那一行�
 
 | ant | 我知道 | 我不知道 | model |
 |---|---|---|---|
-| `ant-locate` | 它是什么 | 它在哪 | sonnet |
-| `ant-verify` | 它在哪 | 它的值是什么 | haiku |
-| `ant-trace` | 两头 | 中间怎么连的 | sonnet |
-| `ant-sift` | 什么算有用 | 有用的有哪些 | sonnet |
-| `ant-census` | 我想要一个数 | 这数多少，以及什么算一个 | sonnet |
-| `ant-adjust` | 每一步怎么做 | — | 按活选 |
-| `ant-pardon` | 每一步怎么做，且不打算回看 | — | haiku |
-| `ant-monitor` | 终态长什么样 | 什么时候到 | haiku |
+| `ant:locate` | 它是什么 | 它在哪 | sonnet |
+| `ant:verify` | 它在哪 | 它的值是什么 | haiku |
+| `ant:trace` | 两头 | 中间怎么连的 | sonnet |
+| `ant:sift` | 什么算有用 | 有用的有哪些 | sonnet |
+| `ant:census` | 我想要一个数 | 这数多少，以及什么算一个 | sonnet |
+| `ant:adjust` | 每一步怎么做 | — | 按活选 |
+| `ant:pardon` | 每一步怎么做，且不打算回看 | — | haiku |
+| `ant:monitor` | 终态长什么样 | 什么时候到 | haiku |
 
-`ant-verify` 的主场是**铺开跑**：一批同构的小命题，一只一条，几十只并行，彼此独立、单价极低。
+`ant:verify` 的主场是**铺开跑**：一批同构的小命题，一只一条，几十只并行，彼此独立、单价极低。
 
 ## 三条贯穿始终的约定
 
@@ -54,7 +54,7 @@ node scripts/build.mjs      # 源卡 → 两侧产物
 ```bash
 # A. 插件装（给使用者）——agents 和 hook 一起进来
 claude plugin marketplace add jinhuang712/ant-agent
-claude plugin install ant-agent@ant-agent
+claude plugin install ant@ant
 
 # B. 软链装（给改这个仓的人）——只搬 agents，改完跑 build 即生效
 ./install-claude.sh
@@ -62,12 +62,12 @@ claude plugin install ant-agent@ant-agent
 
 | | 插件装 | 软链装 |
 |---|---|---|
-| `subagent_type` | `ant-agent:ant-sift` | `ant-sift` |
+| `subagent_type` | `ant:sift` | `sift`（裸 slug，容易跟别的 agent 撞名） |
 | 派发提醒 hook | **有** | 没有（`hooks/` 没人读） |
-| 改完源卡 | build → commit → push → `claude plugin update ant-agent` | build 一步 |
+| 改完源卡 | build → commit → push → `claude plugin update ant@ant` | build 一步 |
 | 装的是 | GitHub 远端快照 | 本地工作副本 |
 
-混装的后果是八只各出现两份。换装法之前先拆掉另一种——软链拆 `rm ~/.claude/agents/ant-*.md`，插件拆 `claude plugin uninstall ant-agent`。
+混装的后果是八只各出现两份。换装法之前先拆掉另一种——软链拆 `rm ~/.claude/agents/*.md`，插件拆 `claude plugin uninstall ant`。
 
 装完还要把授权片段并进你的 `CLAUDE.md`：
 
@@ -84,7 +84,7 @@ cat docs/CLAUDE.md.snippet
 ./install-codex.sh /abs/path/to/project     # 顺便把角色 TOML 落进那个项目
 ```
 
-**Codex 的角色是项目级的**，住在 `<项目根>/.codex/agents/`，换个项目要再落一次。不带路径跑就只装 skill，之后让 `$ant-agent:ant-dispatch` 自己 init。
+**Codex 的角色是项目级的**，住在 `<项目根>/.codex/agents/`，换个项目要再落一次。不带路径跑就只装 skill，之后让 `$ant:ant-dispatch` 自己 init。
 
 两侧的差别只在角色住哪：Claude 全局一份装完即用，Codex 每个项目一份。
 
@@ -96,7 +96,9 @@ cat docs/CLAUDE.md.snippet
 node scripts/build.mjs && node scripts/validate.mjs
 ```
 
-symlink 装载，改完即生效，不用重装。八只共享的契约在 `shared/common-contract.md`，改一处八只全变。
+软链装法改完即生效。插件装法还要 commit、push、`claude plugin update ant@ant`——更新是按 `plugin.json` 的 `version` 判断的，**内容改了不 bump 版本号，update 会回一句「already at the latest version」然后什么都不做**。
+
+八只共享的契约在 `shared/common-contract.md`，改一处八只全变。
 
 ## 设计决定
 
@@ -108,7 +110,7 @@ symlink 装载，改完即生效，不用重装。八只共享的契约在 `shar
 
 **这个代价兑现过一次。** 契约里当时还没有「叶子」那条。
 
-一只 `ant-sift` 收到任务 22 秒内、自己一条命令没跑，就把整份任务书原样转发给另一只 `ant-sift`；子层答完后，父层又重扫了一遍同样的文件。子层 93,782 token 已经够，这一支烧掉 173,997。
+一只 `ant:sift` 收到任务 22 秒内、自己一条命令没跑，就把整份任务书原样转发给另一只 `ant:sift`；子层答完后，父层又重扫了一遍同样的文件。子层 93,782 token 已经够，这一支烧掉 173,997。
 
 三层的 `model` 都碰巧传对了，但档位不继承——haiku 蚂蚁不传 `model`，活就落到舰队里最贵的模型上。
 
@@ -119,7 +121,7 @@ symlink 装载，改完即生效，不用重装。八只共享的契约在 `shar
 ## 已知限制
 
 - **`model:` frontmatter 不生效**（实测）。dispatch 时必须显式传 `model`，否则蚂蚁会跑成主会话的模型，降档收益全丢。这条写进了每只的 description 当每轮提醒
-- **想不起来派，这套东西解决不了。** 蚂蚁靠 description 出现在每轮的可用列表里被想起来，跟 skill 是同一层机制。真要每一步都盯着，得上 PreToolUse hook
+- **想不起来派，只治了一半。** 蚂蚁靠 description 出现在每轮的可用列表里被想起来，跟 skill 是同一层机制。插件装法额外带一个 `PreToolUse` hook，在派发那一刻把回收纪律贴到动作旁边——但它管的是「派出去之后怎么收」，不是「该派的时候想不想得起来」。后者仍然靠自觉
 - **符号导航类 MCP 的 active project 是进程级状态**，跨仓并行会互相踩，跨仓请串行派
 - **Codex 侧已实现但未实测。** 角色 TOML、dispatch skill、插件清单、安装脚本都在，形状是照现有 Codex 插件推的，但三个假设一次没验：`spawn_agent` 认不认自定义 `agent_type`、skill 里的 init 相对路径装完还成不成立、marketplace 清单格式对不对
 

@@ -6,7 +6,7 @@ import { join, resolve, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const CLAUDE_OUT = join(ROOT, "plugins", "ant-agent", "agents");
+const CLAUDE_OUT = join(ROOT, "plugins", "ant", "agents");
 const CODEX_OUT = join(ROOT, "codex", "templates", ".codex", "agents");
 const CODEX_SKILLS = join(ROOT, "codex", "skills");
 
@@ -27,19 +27,19 @@ const codexSlugs = new Set();
 
 for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
   const text = readFileSync(join(CLAUDE_OUT, f), "utf8");
-  const slug = f.replace(/^ant-/, "").replace(/\.md$/, "");
+  const slug = f.replace(/\.md$/, "");
   claudeSlugs.add(slug);
   // 匹配 model=<tier> 而不是整句——description 折成块标量后短语会被换行断开
   if (!/model=(haiku|sonnet|opus)\b/.test(text)) fail(`${f}: 缺 model 提醒`);
 
   // description 会原样注入调用方的系统提示，里面的裸名 ant-census 被照抄去传
-  // subagent_type 就会找不到 agent——插件装载后真名是 ant-agent:ant-census。
+  // subagent_type 就会找不到 agent——插件装载后真名是 ant:census。
   const descBlock = /^description: >-\n((?:  .*\n)+)/m.exec(text)?.[1] ?? "";
   const bare = [...descBlock.matchAll(/(?<!:)\bant-([a-z]+)\b/g)]
     .map((m) => m[1])
     .filter((sl) => sl !== slug && existsSync(join(ROOT, "shared", "roles", `${sl}.md`)));
   if (bare.length) {
-    fail(`${f}: description 里有裸名 ant-${bare[0]} —— 装成插件后真名带前缀，` +
+    fail(`${f}: description 里有裸名 ant-${bare[0]} —— 插件装载后真名是 ant:${bare[0]}，` +
          `照抄会找不到 agent。build.mjs 应该已经补上，产物是不是手改过？`);
   }
 
@@ -57,7 +57,7 @@ for (const f of readdirSync(CLAUDE_OUT).filter((n) => n.endsWith(".md"))) {
     }
   }
   if (!text.includes("Unplanned")) fail(`${f}: 缺 Unplanned 出口`);
-  if (!/^name: ant-/m.test(text)) fail(`${f}: name 不是 ant-* 前缀`);
+  if (!new RegExp(`^name: ${slug}$`, "m").test(text)) fail(`${f}: name 跟文件名对不上`);
 
   // frontmatter 必须是合法 YAML。最常踩的坑是值里含「冒号 + 空格」——解析器会
   // 当成第二个 key 分隔符，整块 frontmatter 报废，而且没有任何运行时报错。
@@ -172,7 +172,7 @@ checkManifest(
 // Claude 插件清单必须躺在 marketplace source 指向的那个目录里
 const claudePluginJson = join(CLAUDE_OUT, "..", ".claude-plugin", "plugin.json");
 if (!existsSync(claudePluginJson)) {
-  fail("plugins/ant-agent/.claude-plugin/plugin.json 不存在 —— Claude 认不出这是个插件");
+  fail("plugins/ant/.claude-plugin/plugin.json 不存在 —— Claude 认不出这是个插件");
 }
 const codexPluginJson = join(ROOT, "codex", ".codex-plugin", "plugin.json");
 if (!existsSync(codexPluginJson)) {

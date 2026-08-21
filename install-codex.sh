@@ -56,7 +56,7 @@ if [ -n "${TARGET}" ]; then
 else
   warn "只装了 skill，角色 TOML 还没落到任何项目"
   echo "     ${c_d}给某个项目装角色：./install-codex.sh /abs/path/to/project${c_e}"
-  echo "     ${c_d}或者让 \$ant-agent:ant-dispatch 自己 init${c_e}"
+  echo "     ${c_d}或者让 \$ant:ant-dispatch 自己 init${c_e}"
 fi
 
 echo

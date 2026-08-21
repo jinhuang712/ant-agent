@@ -1,5 +1,5 @@
 {
-  "name": "ant-agent",
+  "name": "ant",
   "version": "0.1.0",
   "description": "A colony of disposable subagents. The main thread orchestrates and decides; ants do the throwaway investigation in isolated threads and bring back only the conclusion plus a pin.",
   "author": {
@@ -12,7 +12,10 @@
     "longDescription": "Eight ants claimed by cognitive state — what you know versus what you don't. Each runs in its own thread, burns the exploration there, and returns a conclusion with a verifiable pin.",
     "developerName": "jin.huang",
     "category": "Developer Tools",
-    "capabilities": ["Read", "Review"],
+    "capabilities": [
+      "Read",
+      "Review"
+    ],
     "defaultPrompt": [
       "Use $ant-agent:ant-dispatch to hand this investigation to an ant",
       "Use $ant-agent:ant-dispatch to set up the ant roles in this project"

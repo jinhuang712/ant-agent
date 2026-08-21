@@ -1,11 +1,16 @@
 {
-  "name": "ant-agent",
+  "name": "ant",
   "description": "Disposable subagent colony for Codex — keep throwaway investigation out of the main thread.",
   "plugins": [
     {
-      "name": "ant-agent",
-      "source": { "source": "local", "path": "./codex" },
-      "policy": { "installation": "AVAILABLE" },
+      "name": "ant",
+      "source": {
+        "source": "local",
+        "path": "./codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
       "category": "Developer Tools"
     }
   ]

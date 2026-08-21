@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.0 — 2026-08-21
+
+### 改名：ant-agent:ant-census → ant:census
+
+完整名是「插件名:agent 名」，所以两头都得动：插件从 `ant-agent` 改叫 `ant`，Claude 侧的 agent 名去掉 `ant-` 前缀——命名空间已经把身份说清楚了，再带一遍是冗余。
+
+**Codex 侧保持 `ant-census` 不变。** 它按项目根 `.codex/agents/` 里的文件名寻址，没有命名空间兜底；八个叫 `census.toml`、`verify.toml`、`trace.toml` 的文件拷进别人的项目里，撞名了会静默覆盖。跟 description 只给 Claude 侧加前缀是同一个思路：一份源卡，两侧按各自的寻址规则渲染。
+
+改动清单：
+
+| 位置 | 之前 | 现在 |
+|---|---|---|
+| 插件名（两份清单 + `plugin.json`） | `ant-agent` | `ant` |
+| 目录 | `plugins/ant-agent/` | `plugins/ant/` |
+| Claude 产物文件名 | `ant-census.md` | `census.md` |
+| Claude 产物 `name` | `ant-census` | `census` |
+| 派发写法 | `ant-agent:ant-census` | `ant:census` |
+| description 交叉引用 | `ant-agent:ant-sift` | `ant:sift` |
+| Codex 产物 | `ant-census` | 不变 |
+| 安装命令 | `claude plugin install ant-agent@ant-agent` | `claude plugin install ant@ant` |
+
+hook 的匹配跟着收紧成 `/^ant:[a-z]+$/`。之前留的「软链装法裸名」后门去掉了——`hooks/` 只在插件装法下被加载，软链装法压根读不到它，没有为裸名留后门的必要。
+
+**软链装法有个新副作用**：Claude 侧 agent 名去前缀之后，软链装出来的 `subagent_type` 是裸的 `census`、`verify`、`trace`，摊在 `~/.claude/agents/` 全局目录里容易跟别的东西撞名。README 的装法对照表里标出来了。
+
+已装的人要重装：改名等于换了个插件，旧的 `ant-agent@ant-agent` 不会自动迁移。
+
 ## 0.2.1 — 2026-08-21
 
 ### 校验自己也有洞
