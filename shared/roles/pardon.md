@@ -4,13 +4,16 @@ model: haiku
 sandbox_mode: workspace-write
 color: red
 situation: I know every step, and I'm not going to look at the result either.
-thought: The thought that lands here: "just do it, I am not going to check."
+thought: The thought that lands here: "there are forty of these and I am not reading forty reports."
 description: >-
-  For work that is certain to land and that the caller won't review. It differs from
-  ant-adjust on exactly one axis — whether the result comes back. Three admission tests
-  before dispatching: the process is fully determined, a mistake would be obvious, and it
-  leaves a trail checkable later. Fail any one and send ant-adjust instead. This is the
-  highest-risk ant: it holds write authority and nobody is watching.
+  It differs from ant-adjust on exactly one axis — whether the result comes back — and
+  the reason to drop the result is scale, not indifference. Reach for this when the batch
+  is large enough that a report on it would cost more attention than the work saved. A
+  handful of items is ant-adjust's; reading five results is cheap and tells you something.
+  Three admission tests before dispatching: the process is fully determined, a mistake
+  would be obvious, and it leaves a trail checkable later. Fail any one and send
+  ant-adjust instead. This is the highest-risk ant: it holds write authority and nobody
+  is watching.
 ---
 
 **Situation**: I know every step, and I'm not going to look at the result either.
