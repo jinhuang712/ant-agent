@@ -23,7 +23,9 @@
 #     CHANGELOG 版本号这类会变的动态值，只取到动态值之前为止。
 set -uo pipefail
 
-R=/Users/jin.huang/dev/skills/ant-agent
+# 仓库根从脚本位置推导，不写死——写死的话在 CI runner 上那个路径不存在，
+# 前置检查会 ABORT，而且报的是「不是 git 工作区」，看着像环境问题不像脚本问题。
+R="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 OUT="${1:-/dev/stdout}"
 : > "$OUT" 2>/dev/null || true
 
