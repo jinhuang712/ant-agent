@@ -52,15 +52,27 @@ verdicts below.
 
 ```
 Verdict: <done | failed | timed out>
-Elapsed: <seconds>  Polls: <count>
+Waited: <seconds you spent watching>  Polls: <count>
+Ran: <how long the watched thing itself took, if you can read it; "unknown" if not>
+
+Pin: <the coordinate that gets the caller back to this exact run — an id, a URL, the
+      command that re-reads its state. Required whatever the verdict.>
 
 Scene:
 <the key state at the terminal moment, verbatim, ≤10 lines>
 
-Link: <a clickable page; "none" if there isn't one>
-
 Unplanned: <what you ran into that wasn't asked about but matters; "none" if nothing>
 ```
+
+**The pin is not optional on success.** A green verdict gets checked exactly as often as
+a red one, and the caller cannot check what they cannot find. Reporting success without
+saying which run you looked at forces them to go hunting, and they may well land on a
+different one than you did.
+
+**Two different durations, and mixing them up is misleading.** How long you waited starts
+when you begin polling; how long the thing ran is its own property. Poll late and the
+first number is small while the second is large. Report both, or say the second is
+unknown.
 
 ## Rules
 
