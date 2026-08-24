@@ -22,22 +22,22 @@
 ### Claude Code
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jinhuang712/ant-agent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jinhuang712/ant-agent/main/install-claude.sh | bash
 ```
 
 装完重启 Claude Code，或者在会话里跑 `/reload-plugins`。
 
-脚本做三件事：注册 marketplace、装插件、把授权片段并进 `~/.claude/CLAUDE.md`。第三件不能省——Claude Code 的系统提示里带着一句「用户没要求就别调 AgentTool」，不写下授权，八只装了也不会被主动派出去。改 `CLAUDE.md` 之前自动备份，重复跑安全。
+做三件事：注册 marketplace、装插件、把授权片段并进 `~/.claude/CLAUDE.md`。第三件不能省——Claude Code 的系统提示里带着一句「用户没要求就别调 AgentTool」，不写下授权，八只装了也不会被主动派出去。改 `CLAUDE.md` 之前自动备份，重复跑安全。
 
 ### Codex
 
-角色是**项目级**的，得指定落到哪个项目：
+角色是**项目级**的，装的时候要说清楚落到哪个项目：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jinhuang712/ant-agent/main/install.sh | bash -s -- --codex /abs/path/to/project
+curl -fsSL https://raw.githubusercontent.com/jinhuang712/ant-agent/main/install-codex.sh | bash -s -- /abs/path/to/project
 ```
 
-换个项目要再跑一次。不用 Claude Code 的话加 `--no-claude`，只装 Codex 这半。
+做两件事：装全局的 dispatch skill、把八个角色 TOML 落进那个项目。换个项目再跑一次，带上新路径。
 
 ## 用
 
