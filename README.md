@@ -84,6 +84,12 @@ cat docs/CLAUDE.md.snippet
 ./install-codex.sh /abs/path/to/project     # 顺便把角色 TOML 落进那个项目
 ```
 
+仓里还有一套原生插件清单（`codex/.codex-plugin/plugin.json` 与 `.agents/plugins/marketplace.json`）。
+
+`codex plugin marketplace add` 加 `codex plugin add ant@ant` 实测能装上，目录跟源码 `codex/` 镜像。**但装完之后 dispatch skill 会不会被自动发现，没验过**，要真实 Codex 会话才能确认。
+
+在那之前，上面那个脚本是唯一走通全程的路径。
+
 **Codex 的角色是项目级的**，住在 `<项目根>/.codex/agents/`，换个项目要再落一次。不带路径跑就只装 skill，之后让 `$ant:ant-dispatch` 自己 init。
 
 两侧的差别只在角色住哪：Claude 全局一份装完即用，Codex 每个项目一份。
